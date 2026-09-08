@@ -1,0 +1,21 @@
+{
+  "v": 1,
+  "type": "OFFER",
+  "id": "5c1b1e2a-9f3d-4f8a-bc21-7e6b0d5a91f4",
+  "payload": {
+    "transferId": "5c1b1e2a-9f3d-4f8a-bc21-7e6b0d5a91f4",
+    "files": [
+      {
+        "name": "holiday.jpg",
+        "size": 2097152,
+        "mime": "image/jpeg",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "notes.txt",
+        "size": 12345,
+        "mime": "text/plain"
+      }
+    ]
+  }
+}

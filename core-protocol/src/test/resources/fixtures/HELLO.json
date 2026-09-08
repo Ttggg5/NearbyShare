@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "HELLO",
+  "id": "9f2c7f4e-2a0b-4a3e-8b47-0f4f2f4f4a11",
+  "payload": {
+    "deviceId": "1b7d6f60-9d2c-4a1e-9c1a-2f2f9a1e6d31",
+    "deviceName": "Pixel 8",
+    "protocolVersion": 1
+  }
+}
