@@ -1,5 +1,6 @@
 package com.nearbyshare.network.transfer
 
+import android.util.Log
 import com.nearbyshare.network.tls.PeerTrustException
 import com.nearbyshare.network.tls.PeerTrustPolicy
 import com.nearbyshare.network.tls.TlsSocketFactory
@@ -181,6 +182,12 @@ class TransferServer(
             // A failure inside TransferSession has already published a terminal
             // state and told the peer. Anything reaching here happened earlier
             // -- a handshake or trust failure -- and still needs surfacing.
+            //
+            // This is logged explicitly (rather than relying solely on
+            // `lastState`, which only reaches a low-importance notification and
+            // is easy to miss) because a pre-HELLO handshake failure is exactly
+            // the kind of thing that otherwise looks like "nothing happened".
+            Log.e(TAG, "Inbound connection from ${accepted.remoteAddressOrUnknown()} failed", e)
             if (!_lastState.value.isTerminal) {
                 _lastState.value = TransferState.Failed(
                     transferId = null,
@@ -199,5 +206,12 @@ class TransferServer(
         is PeerTrustException -> Protocol.ErrorCode.IDENTITY_MISMATCH
         is IOException -> Protocol.ErrorCode.IO_ERROR
         else -> Protocol.ErrorCode.INTERNAL_ERROR
+    }
+
+    private fun Socket.remoteAddressOrUnknown(): String =
+        runCatching { remoteSocketAddress?.toString() }.getOrNull() ?: "unknown address"
+
+    private companion object {
+        const val TAG = "TransferServer"
     }
 }

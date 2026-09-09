@@ -118,11 +118,21 @@ class TlsSocketFactory(
         private const val PROTOCOL = "TLS"
 
         /**
-         * TLS 1.2 is the floor: it is what Android 8.0 (minSdk 26) and .NET on
-         * Windows both support everywhere. TLS 1.3 is preferred when both ends
-         * have it.
+         * TLS 1.2 only, deliberately excluding 1.3.
+         *
+         * Mutual TLS (a client certificate, which this protocol always uses) is
+         * where TLS 1.3 interop breaks down in practice: Windows's Schannel
+         * provider -- what .NET's `SslStream` uses under the hood -- has a long
+         * history of aborting a TLS 1.3 handshake that requests a client
+         * certificate against a non-Windows peer, closing the raw socket instead
+         * of sending an alert. That surfaces on the .NET side as exactly
+         * "Received an unexpected EOF or 0 bytes from the transport stream" and
+         * on the Android side as nothing at all, since the connection never gets
+         * far enough to reach any of this app's own code. TLS 1.2 mutual
+         * authentication has none of these issues and is universally supported,
+         * so it is the floor *and* the ceiling here.
          */
-        val ALLOWED_PROTOCOLS: Set<String> = setOf("TLSv1.2", "TLSv1.3")
+        val ALLOWED_PROTOCOLS: Set<String> = setOf("TLSv1.2")
 
         const val DEFAULT_BACKLOG: Int = 8
         const val DEFAULT_CONNECT_TIMEOUT_MILLIS: Int = 10_000
