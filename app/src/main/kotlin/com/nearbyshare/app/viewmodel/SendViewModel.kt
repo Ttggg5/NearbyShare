@@ -42,16 +42,18 @@ class SendViewModel(
         session = null
         _state.value = TransferState.Connecting(peer.name)
 
+        val context = getApplication<Application>()
+
         // Keeps the process (and this coroutine) alive if the user backgrounds
         // the app mid-transfer; see TransferForegroundService.
         ContextCompat.startForegroundService(
-            getApplication(),
-            Intent(getApplication(), TransferForegroundService::class.java)
+            context,
+            Intent(context, TransferForegroundService::class.java)
                 .setAction(TransferForegroundService.ACTION_START_SHARING),
         )
 
         viewModelScope.launch {
-            val sources = ContentUriFileSource.forUris(getApplication(), uris)
+            val sources = ContentUriFileSource.forUris(context, uris)
             if (sources.isEmpty()) {
                 _state.value = TransferState.Failed(
                     transferId = null,
