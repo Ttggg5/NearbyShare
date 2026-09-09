@@ -1,0 +1,5 @@
+<resources>
+    <!-- A plain platform theme: the UI itself is Compose/Material3, this only
+         sets the window background before the first frame is drawn. -->
+    <style name="Theme.NearbyShare" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
