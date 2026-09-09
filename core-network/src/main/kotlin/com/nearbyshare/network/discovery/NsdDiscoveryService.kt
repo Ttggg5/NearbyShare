@@ -175,7 +175,7 @@ class NsdDiscoveryService(
 
     /** Resolve one service and fold it into [peers]. Suspends until it settles. */
     private suspend fun resolve(found: NsdServiceInfo) {
-        val resolved = kotlinx.coroutines.suspendCancellableCoroutine { continuation ->
+        val resolved = kotlinx.coroutines.suspendCancellableCoroutine<NsdServiceInfo?> { continuation ->
             val listener = object : NsdManager.ResolveListener {
                 override fun onResolveFailed(info: NsdServiceInfo, errorCode: Int) {
                     if (continuation.isActive) continuation.resumeWith(Result.success(null))
